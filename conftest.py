@@ -26,8 +26,8 @@ def _mystery_machine():
 def _mm_session_scoped(_mystery_machine):
     """Session-scoped fixture returning the _mystery_machine dataframe.
 
-    As the src functions update their input df inplace, mm_session_scoped will
-    be modified instead of mystery_machine directly.
+    As the src functions update their input df inplace, _mm_session_scoped will
+    be modified instead of _mystery_machine directly.
 
     """
     return _mystery_machine
@@ -35,17 +35,17 @@ def _mm_session_scoped(_mystery_machine):
 
 @pytest.fixture(scope="module")
 def _mm_module_scoped(mystery_machine):
-    """Module-scoped mystery_machine dataframe."""
+    """Module-scoped _mystery_machine dataframe."""
     return mystery_machine
 
 
 @pytest.fixture(scope="class")
 def _mm_class_scoped(mystery_machine):
-    """Class-scoped mystery_machine dataframe."""
+    """Class-scoped _mystery_machine dataframe."""
     return mystery_machine
 
 
 @pytest.fixture(scope="function")
 def _mm_function_scoped(mystery_machine):
-    """Function-scoped mystery machine dataframe."""
+    """Function-scoped _mystery_machine dataframe."""
     return mystery_machine
