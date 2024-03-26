@@ -30,22 +30,22 @@ def _mm_session_scoped(_mystery_machine):
     be modified instead of _mystery_machine directly.
 
     """
-    return _mystery_machine
+    return _mystery_machine.copy(deep=True)
 
 
 @pytest.fixture(scope="module")
-def _mm_module_scoped(mystery_machine):
+def _mm_module_scoped(_mystery_machine):
     """Module-scoped _mystery_machine dataframe."""
-    return mystery_machine
+    return _mystery_machine.copy(deep=True)
 
 
 @pytest.fixture(scope="class")
-def _mm_class_scoped(mystery_machine):
+def _mm_class_scoped(_mystery_machine):
     """Class-scoped _mystery_machine dataframe."""
-    return mystery_machine
+    return _mystery_machine.copy(deep=True)
 
 
 @pytest.fixture(scope="function")
-def _mm_function_scoped(mystery_machine):
+def _mm_function_scoped(_mystery_machine):
     """Function-scoped _mystery_machine dataframe."""
-    return mystery_machine
+    return _mystery_machine.copy(deep=True)
