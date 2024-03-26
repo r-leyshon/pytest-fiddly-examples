@@ -38,7 +38,7 @@ def serve_food(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def update_food(
+def fancy_dessert(
     df: pd.DataFrame,
     fave_desserts: dict = {
         "Daphne": "brownie",
