@@ -1,5 +1,5 @@
 """Testing pandas operations with test fixtures."""
-from example_pkg.feed_characters import serve_food, fancy_dessert
+from example_pkg.feed_characters import serve_food
 
 
 def test_scopes_before_action(
@@ -144,63 +144,20 @@ class TestServeFood:
         )
 
 
-class TestFancyDessert:
-    """Tests for fancy_dessert()."""
+class TestSomeOtherTestClass:
+    """Demonstrate persistance of changes to class-scoped fixture."""
 
-    def test_fancy_dessert_updates_fixtures_as_expected(
-        self,
-        _mm_session_scoped,
-        _mm_module_scoped,
-        _mm_class_scoped,
-        _mm_function_scoped,
+    def test_whether_changes_to_stomach_contents_persist(
+        self, _mm_class_scoped, _mm_module_scoped
     ):
-        """Test fancy_dessert() changes favourite_food values to dessert.
-
-        These assertions depend on the current state of the scoped fixtures. If
-        changes performed in TestServeFood::test_serve_food_updates_df()
-        persist, then characters will not have empty stomach_contents,
-        resulting in a switch of their favourite_food.
-        """
-        # first, check update_food() with the session-scoped fixture.
-        assert list(fancy_dessert(_mm_session_scoped)["fave_food"].values) == [
-            "brownie",
-            "ice cream",
-            "apple crumble",
-            "pudding",
-            "banana bread",
-        ], (
-            "The changes to the session-scoped df 'stomach_contents' column",
-            " have not persisted as expected.",
-        )
-        # next, check update_food() with the module-scoped fixture.
-        assert list(fancy_dessert(_mm_module_scoped)["fave_food"].values) == [
-            "brownie",
-            "ice cream",
-            "apple crumble",
-            "pudding",
-            "banana bread",
-        ], (
-            "The changes to the module-scoped df 'stomach_contents' column",
-            " have not persisted as expected.",
-        )
-        # now, check update_food() with the class-scoped fixture. Note that we
-        # are now making assertions about changes from a different class.
-        assert list(fancy_dessert(_mm_class_scoped)["fave_food"].values) == [
+        """Check the stomach_contents column."""
+        assert list(_mm_module_scoped["stomach_contents"].values) == [
             "carrots",
             "beans",
             "scooby snacks",
             "burgers",
             "hot dogs",
-        ], (
-            "The class-scoped df 'stomach_contents' column was not as",
-            " expected",
-        )
-        # Finally, check update_food() with the function-scoped fixture. As
-        # in TestServeFood::test_expected_states_within_same_class(), the
-        # function-scoped fixture starts from scratch.
-        assert list(
-            fancy_dessert(_mm_function_scoped)["fave_food"].values
-        ) == ["carrots", "beans", "scooby snacks", "burgers", "hot dogs"], (
-            "The function-scoped df 'stomach_contents' column was not as",
-            " expected",
-        )
+        ], "Changes to module-scoped fixture have not propagated as expected."
+        assert (
+            list(_mm_class_scoped["stomach_contents"].values) == ["empty"] * 5
+        ), "Values in class-scoped fixture are not as expected"
