@@ -50,3 +50,14 @@ def test_module_scoped_tmp_exists(_module_scoped_tmp):
     assert "glitch" not in what_was_written
     assert "bug" in what_was_written
     assert os.listdir(_module_scoped_tmp) == ["new_poem.txt"]
+
+
+def test_do_i_get_a_new_tmp_path_factory(_module_scoped_tmp):
+    assert not os.listdir(_module_scoped_tmp) == [] # not empty...
+    assert os.listdir(_module_scoped_tmp) == ["new_poem.txt"]
+    # module-scoped fixture still contains file made in previous test function
+    with open(os.path.join(_module_scoped_tmp, "new_poem.txt")) as f:
+        found_txt = f.read()
+        f.close()
+    assert "glitch" not in found_txt
+    assert "bug" in found_txt
