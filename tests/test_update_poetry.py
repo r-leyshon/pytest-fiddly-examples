@@ -20,3 +20,9 @@ def test_update_poem_writes_new_pattern_to_file(tmp_path):
     assert "glitch" not in what_was_written
     assert "bug" in what_was_written
     assert os.listdir(tmp_path) == ["new_poem.txt"]
+
+
+def test_do_i_get_a_new_tmp_path(tmp_path):
+    """Remind ourselves that tmp_path is function-scoped."""
+    assert "new_poem" not in os.listdir(tmp_path)
+    assert os.listdir(tmp_path) == []
