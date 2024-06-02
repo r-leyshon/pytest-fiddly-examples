@@ -35,6 +35,7 @@ def is_num_prime(pos_int: int) -> bool:
         else:
             return True
 
+
 if __name__ == "__main__":
     for i in range(1, 101):
         print(f"{i}: {is_num_prime(i)}")
