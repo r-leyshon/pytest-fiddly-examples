@@ -53,7 +53,7 @@ def sum_if_prime(pos_int1: int, pos_int2: int) -> tuple:
         tuple of the inputs.
     """
     if is_num_prime(pos_int1) and is_num_prime(pos_int2):
-        return (pos_int1 + pos_int2)
+        return (pos_int1 + pos_int2,)
     else:
         return (pos_int1, pos_int2)
 
