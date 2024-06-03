@@ -37,6 +37,21 @@ def test_is_num_primes_with_parametrized(some_integers, answers):
     assert is_num_prime(some_integers) == answers
 
 
+# if my list of cases is growing, I can employ other tactics to reduce
+# complexity
+in_ = range(1, 21)
+out = [
+    False, True, True, False, True, False, True, False, False, False,
+    True, False, True, False, False, False, True, False, True, False,
+    ]
+
+
+@pytest.mark.parametrize("some_integers, some_answers", zip(in_, out))
+def test_is_num_primes_with_parametrized_lists(some_integers, some_answers):
+    """The same tests but this time with zipped inputs."""
+    assert is_num_prime(some_integers) == some_answers
+
+
 def test_is_num_primes_exceptions_manually():
     """Testing the function's defensive checks.
 
@@ -54,8 +69,8 @@ def test_is_num_primes_exceptions_manually():
 def test_is_num_primes_exceptions_parametrized(some_integers, exception_types):
     """The same defensive checks but this time with parametrized input.
 
-    Less lines in the test unit but if we increase the number of cases, we need
-    to add more lines to the parametrized fixture instead.
+    Less lines in the test but if we increase the number of cases, we need to
+    add more lines to the parametrized fixture instead.
     """
     with pytest.raises(exception_types, match="must be a positive integer."):
         is_num_prime(some_integers)
