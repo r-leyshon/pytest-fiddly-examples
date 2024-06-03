@@ -36,6 +36,28 @@ def is_num_prime(pos_int: int) -> bool:
             return True
 
 
+def sum_if_prime(pos_int1: int, pos_int2: int) -> tuple:
+    """Sum 2 integers only if they are prime numbers.
+
+    Parameters
+    ----------
+    pos_int1 : int
+        A positive integer.
+    pos_int2 : int
+        A positive integer.
+
+    Returns
+    -------
+    tuple
+        Tuple of one integer if both inputs are prime numbers, else returns a
+        tuple of the inputs.
+    """
+    if is_num_prime(pos_int1) and is_num_prime(pos_int2):
+        return (pos_int1 + pos_int2)
+    else:
+        return (pos_int1, pos_int2)
+
+
 if __name__ == "__main__":
     for i in range(1, 101):
         print(f"{i}: {is_num_prime(i)}")
