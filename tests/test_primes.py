@@ -4,6 +4,30 @@ import pytest
 from example_pkg.primes import is_num_prime
 
 
+def test_is_num_primes_exceptions_manually():
+    """Testing the function's defensive checks.
+
+    Here we have to repeat a fair bit of pytest boilerplate.
+    """
+    with pytest.raises(TypeError, match="must be a positive integer."):
+        is_num_prime(1.0)
+    with pytest.raises(ValueError, match="must be a positive integer."):
+        is_num_prime(-1)
+
+
+@pytest.mark.parametrize(
+    "some_integers, exception_types", [(1.0, TypeError), (-1, ValueError)]
+    )
+def test_is_num_primes_exceptions_parametrized(some_integers, exception_types):
+    """The same defensive checks but this time with parametrized input.
+
+    Less lines in the test but if we increase the number of cases, we need to
+    add more lines to the parametrized fixture instead.
+    """
+    with pytest.raises(exception_types, match="must be a positive integer."):
+        is_num_prime(some_integers)
+
+
 def test_is_num_primes_manually():
     """Test several positive integers return expected boolean.
 
@@ -51,26 +75,3 @@ def test_is_num_primes_with_parametrized_lists(some_integers, some_answers):
     """The same tests but this time with zipped inputs."""
     assert is_num_prime(some_integers) == some_answers
 
-
-def test_is_num_primes_exceptions_manually():
-    """Testing the function's defensive checks.
-
-    Here we have to repeat a fair bit of pytest boilerplate.
-    """
-    with pytest.raises(TypeError, match="must be a positive integer."):
-        is_num_prime(1.0)
-    with pytest.raises(ValueError, match="must be a positive integer."):
-        is_num_prime(-1)
-
-
-@pytest.mark.parametrize(
-    "some_integers, exception_types", [(1.0, TypeError), (-1, ValueError)]
-    )
-def test_is_num_primes_exceptions_parametrized(some_integers, exception_types):
-    """The same defensive checks but this time with parametrized input.
-
-    Less lines in the test but if we increase the number of cases, we need to
-    add more lines to the parametrized fixture instead.
-    """
-    with pytest.raises(exception_types, match="must be a positive integer."):
-        is_num_prime(some_integers)
