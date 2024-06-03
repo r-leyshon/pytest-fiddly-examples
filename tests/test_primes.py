@@ -1,7 +1,7 @@
 """Tests for primes module."""
 import pytest
 
-from example_pkg.primes import is_num_prime
+from example_pkg.primes import is_num_prime, sum_if_prime
 
 
 def test_is_num_primes_exceptions_manually():
@@ -75,3 +75,52 @@ def test_is_num_primes_with_parametrized_lists(some_integers, some_answers):
     """The same tests but this time with zipped inputs."""
     assert is_num_prime(some_integers) == some_answers
 
+
+def test_sum_if_prime_with_manual_combinations():
+    """Manually check several cases."""
+    assert sum_if_prime(1, 1) == (1, 1)
+    assert sum_if_prime(1, 2) == (1, 2)
+    assert sum_if_prime(1, 3) == (1, 3)
+    assert sum_if_prime(1, 4) == (1, 4)
+    assert sum_if_prime(1, 5) == (1, 5)
+    assert sum_if_prime(2, 1) == (2, 1)
+    assert sum_if_prime(2, 2) == (4,) # the first case where both are primes
+    assert sum_if_prime(2, 3) == (5,) 
+    assert sum_if_prime(2, 4) == (2, 4)
+    assert sum_if_prime(2, 5) == (7,)
+    # ...
+
+
+# Using stacked parametrization, we can avoid manually typing the cases out,
+# though we do still need to define a dictionary of the expected answers...
+@pytest.fixture
+def expected_answers() -> dict:
+    """A dictionary of expected answers for all combinations of 1 through 5.
+
+    First key corresponds to `pos_int1` and second key is `pos_int2`.
+
+    Returns
+    -------
+    dict
+        Dictionary of cases and their expected tuples.
+    """
+    expected= {
+        1: {1: (1,1), 2: (1,2), 3: (1,3), 4: (1,4), 5: (1,5),},
+        2: {1: (2,1), 2: (4,), 3: (5,), 4: (2,4), 5: (7,),},
+        3: {1: (3,1), 2: (5,), 3: (6,), 4: (3,4), 5: (8,),},
+        4: {1: (4,1), 2: (4,2), 3: (4,3), 4: (4,4), 5: (4,5),},
+        5: {1: (5,1), 2: (7,), 3: (8,), 4: (5,4), 5: (10,),},
+    }
+    return expected
+
+
+@pytest.mark.parametrize("first_ints", range(1,6))
+@pytest.mark.parametrize("second_ints", range(1,6))
+def test_sum_if_prime_stacked_parametrized_inputs(
+    first_ints, second_ints, expected_answers):
+    """Using stacked parameters to set up combinations of all cases."""
+    assert isinstance(sum_if_prime(first_ints, second_ints), tuple)
+    answer = sum_if_prime(first_ints, second_ints)
+    # using the parametrized values, pull out their keys from the
+    # expected_answers dictionary
+    assert answer == expected_answers[first_ints][second_ints]
