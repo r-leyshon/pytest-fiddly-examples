@@ -53,7 +53,7 @@ def test_is_num_primes_with_list():
     "some_integers, answers",
     [(1, False), (2, True), (3, True), (4, False), (5, True)]
     )
-def test_is_num_primes_with_parametrized(some_integers, answers):
+def test_is_num_primes_parametrized(some_integers, answers):
     """The same tests but this time with parametrized input.
 
     Fewer lines and 5 seperate tests are run by pytest.
