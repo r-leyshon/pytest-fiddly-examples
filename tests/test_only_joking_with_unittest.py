@@ -1,3 +1,4 @@
+"""Test only_joking.py using unittest to mock api calls."""
 import pytest
 from unittest.mock import MagicMock, patch
 import requests
