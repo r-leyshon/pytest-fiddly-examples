@@ -62,18 +62,6 @@ def _mock_response():
     return MockResponse
 
 
-@pytest.fixture
-def _mock_get(*args, **kwargs):
-    """Step 2, Return fixtures with the correct header.
-
-    If the test uses "text/plain" format, we need to return a MockResponse
-    class instance with headers attribute equal to
-    {"Content-Type": "text/plain"}, likewise for JSON.
-    """
-    f = kwargs["headers"]["Accept"]
-    return _mock_response(f)
-
-
 def test_get_joke_with_OOP(monkeypatch, _mock_response):
     """Test get_joke using the mock class fixture.
 
