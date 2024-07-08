@@ -2,7 +2,7 @@
 import pytest
 import requests
 
-from example_pkg.only_joking import get_joke
+from example_pkg.only_joking import get_joke, _handle_response
 
 ULTI_JOKE = """
 "Doc, I can't stop singing 'The Green, Green Grass of Home.'" "That sounds like
@@ -43,6 +43,7 @@ def _mock_response():
     HEADERS_MAP = {
         "text/plain": {"Content-Type": "text/plain"},
         "application/json": {"Content-Type": "application/json"},
+        "text/html": {"Content-Type": "text/html"},
     }
 
     class MockResponse:
@@ -59,6 +60,18 @@ def _mock_response():
             return None
 
     return MockResponse
+
+
+@pytest.fixture
+def _mock_get(*args, **kwargs):
+    """Step 2, Return fixtures with the correct header.
+
+    If the test uses "text/plain" format, we need to return a MockResponse
+    class instance with headers attribute equal to
+    {"Content-Type": "text/plain"}, likewise for JSON.
+    """
+    f = kwargs["headers"]["Accept"]
+    return _mock_response(f)
 
 
 def test_get_joke_with_OOP(monkeypatch, _mock_response):
@@ -85,3 +98,36 @@ def test_get_joke_with_OOP(monkeypatch, _mock_response):
     # Step 5, make assertions
     assert j_txt == ULTI_JOKE, f"Expected:\n'{ULTI_JOKE}\nFound:\n{j_txt}'"
     assert j_json == ULTI_JOKE, f"Expected:\n'{ULTI_JOKE}\nFound:\n{j_json}'"
+
+
+def test_get_joke_not_implemented(monkeypatch, _mock_response):
+    def _mock_get(*args, **kwargs):
+        f = kwargs["headers"]["Accept"]
+        return _mock_response(f)
+
+    monkeypatch.setattr(requests, "get", _mock_get)
+    # Call the function and assert it raises NotImplementedError
+    with pytest.raises(
+        NotImplementedError,
+        match="This client accepts 'application/json' or 'text/plain' format"):
+        get_joke(f="text/html")
+
+
+@pytest.fixture
+def _mock_bad_response():
+    class MockBadResponse:
+        def __init__(self, *args, **kwargs):
+            self.ok = False
+            self.status_code = 429
+            self.reason = "Too many requests"
+    return MockBadResponse
+
+
+def test_get_joke_bad_response(monkeypatch, _mock_bad_response):
+    def _mock_get(*args, **kwargs):
+        f = kwargs["headers"]["Accept"]
+        return _mock_bad_response(f)
+    monkeypatch.setattr(requests, "get", _mock_get)
+    # check func raises on bad response
+    with pytest.raises(requests.HTTPError, match="429: Too many requests"):
+        get_joke()
