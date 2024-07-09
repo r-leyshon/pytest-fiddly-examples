@@ -4,11 +4,24 @@ from unittest.mock import MagicMock, patch
 import requests
 
 from example_pkg.only_joking import _query_endpoint, _handle_response, get_joke
+import example_pkg.only_joking
 
 ULTI_JOKE = """
 "Doc, I can't stop singing 'The Green, Green Grass of Home.'" "That sounds like
 Tom Jones Syndrome." "Is it common?" Well, "It's Not Unusual."
 """
+
+
+def test_get_joke_mocked_entirely(monkeypatch):
+    """Completely replace the entire get_joke return value.
+
+    Not a good idea for testing as none of our source code will be tested. But
+    this demonstrates how to entirely scrub a function and replace with any
+    placeholder value at pytest runtime."""
+    mock_joke = MagicMock(return_value=ULTI_JOKE)
+    with patch("example_pkg.only_joking.get_joke", mock_joke):
+        joke = example_pkg.only_joking.get_joke()
+        assert joke == ULTI_JOKE
 
 
 def test_get_joke_json():

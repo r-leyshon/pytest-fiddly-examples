@@ -11,18 +11,25 @@ Tom Jones Syndrome." "Is it common?" Well, "It's Not Unusual."
 """
 
 def test_get_joke_mocked_entirely(monkeypatch):
+    """Completely replace the entire get_joke return value.
+
+    Not a good idea for testing as none of our source code will be tested. But
+    this demonstrates how to entirely scrub a function and replace with any
+    placeholder value at pytest runtime."""
+
     def _mock_joke(*args):
         """Return the joke text.
 
         monkeypatch.setattr expects the value argument to be callable. In plain
         English, a function or class."""
         return ULTI_JOKE
+
     monkeypatch.setattr(
         target=example_pkg.only_joking,
         name="get_joke",
         value=_mock_joke
         )
-    # Use the module's namespace
+    # Use the module's namespace to correspond with the monkeypatch
     assert example_pkg.only_joking.get_joke() == ULTI_JOKE 
 
 
