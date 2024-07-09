@@ -3,11 +3,27 @@ import pytest
 import requests
 
 from example_pkg.only_joking import get_joke, _handle_response
+import example_pkg.only_joking
 
 ULTI_JOKE = """
 "Doc, I can't stop singing 'The Green, Green Grass of Home.'" "That sounds like
 Tom Jones Syndrome." "Is it common?" Well, "It's Not Unusual."
 """
+
+def test_get_joke_mocked_entirely(monkeypatch):
+    def _mock_joke(*args):
+        """Return the joke text.
+
+        monkeypatch.setattr expects the value argument to be callable. In plain
+        English, a function or class."""
+        return ULTI_JOKE
+    monkeypatch.setattr(
+        target=example_pkg.only_joking,
+        name="get_joke",
+        value=_mock_joke
+        )
+    # Use the module's namespace
+    assert example_pkg.only_joking.get_joke() == ULTI_JOKE 
 
 
 def test_get_joke_no_OOP(monkeypatch):
