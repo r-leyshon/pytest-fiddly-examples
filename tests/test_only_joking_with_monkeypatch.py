@@ -67,7 +67,7 @@ def test_get_joke_with_OOP(monkeypatch, _mock_response):
 
     This approach is the implementation suggested in the pytest docs.
     """
-    def _mock_get(*args, **kwargs):
+    def _mock_get_good_resp(*args, **kwargs):
         """Step 2, Return fixtures with the correct header.
 
         If the test uses "text/plain" format, we need to return a MockResponse
@@ -77,7 +77,7 @@ def test_get_joke_with_OOP(monkeypatch, _mock_response):
         f = kwargs["headers"]["Accept"]
         return _mock_response(f)
     # Step 3, patch requests.get
-    monkeypatch.setattr(requests, "get", _mock_get)
+    monkeypatch.setattr(requests, "get", _mock_get_good_resp)
     # Step 4, use function
     # Test for plain text format
     j_txt = get_joke(f="text/plain")
@@ -86,15 +86,6 @@ def test_get_joke_with_OOP(monkeypatch, _mock_response):
     # Step 5, make assertions
     assert j_txt == ULTI_JOKE, f"Expected:\n'{ULTI_JOKE}\nFound:\n{j_txt}'"
     assert j_json == ULTI_JOKE, f"Expected:\n'{ULTI_JOKE}\nFound:\n{j_json}'"
-
-
-def test_get_joke_not_implemented(monkeypatch, _mock_response):
-    def _mock_get(*args, **kwargs):
-        f = kwargs["headers"]["Accept"]
-        return _mock_response(f)
-
-    monkeypatch.setattr(requests, "get", _mock_get)
-    # Call the function and assert it raises NotImplementedError
     with pytest.raises(
         NotImplementedError,
         match="This client accepts 'application/json' or 'text/plain' format"):
@@ -112,10 +103,10 @@ def _mock_bad_response():
 
 
 def test_get_joke_bad_response(monkeypatch, _mock_bad_response):
-    def _mock_get(*args, **kwargs):
+    def _mock_get_bad_response(*args, **kwargs):
         f = kwargs["headers"]["Accept"]
         return _mock_bad_response(f)
-    monkeypatch.setattr(requests, "get", _mock_get)
+    monkeypatch.setattr(requests, "get", _mock_get_bad_response)
     # check func raises on bad response
     with pytest.raises(requests.HTTPError, match="429: Too many requests"):
         get_joke()
