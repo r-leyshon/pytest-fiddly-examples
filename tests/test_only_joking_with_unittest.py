@@ -24,7 +24,8 @@ def test_get_joke_magicmocked_entirely():
         assert joke == ULTI_JOKE
 
 
-def test_get_joke_json_magicmock():
+def test_get_joke_json_magicmocked():
+    """Test behaviour when user asked for JSON joke."""
     # step 1: Mock
     mock_response = MagicMock(spec=requests.models.Response)
     mock_response.ok = True
@@ -38,7 +39,8 @@ def test_get_joke_json_magicmock():
         assert joke == ULTI_JOKE
 
 
-def test_get_joke_text_magicmock():
+def test_get_joke_text_magicmocked():
+    """Test behaviour when user asked for plain text joke."""
     # step 1: Mock
     mock_response = MagicMock(spec=requests.models.Response)
     mock_response.ok = True
@@ -52,7 +54,8 @@ def test_get_joke_text_magicmock():
         assert joke == ULTI_JOKE
 
 
-def test__handle_response_not_implemented_magicmock():
+def test__handle_response_not_implemented_magicmocked():
+    """Test behaviour when user asked for HTML response."""
     # step 1: Mock
     mock_response = MagicMock(spec=requests.models.Response)
     mock_response.ok = True
@@ -66,7 +69,8 @@ def test__handle_response_not_implemented_magicmock():
             get_joke(f="text/html")
 
 
-def test_get_joke_http_error_magicmock():
+def test_get_joke_http_error_magicmocked():
+    """Test bad HTTP response."""
     # step 1: Mock
     mock_response = MagicMock(spec=requests.models.Response)
     mock_response.ok = False

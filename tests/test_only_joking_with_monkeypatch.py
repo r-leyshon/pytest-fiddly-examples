@@ -83,10 +83,11 @@ def _mock_response():
     return MockResponse
 
 
-def test_get_joke_monkeypatched_with_OOP(monkeypatch, _mock_response):
-    """Test get_joke using the mock class fixture.
+def test_get_joke_json_monkeypatched(monkeypatch, _mock_response):
+    """Test behaviour when user asked for JSON joke.
 
-    This approach is the implementation suggested in the pytest docs.
+    Test get_joke using the mock class fixture. This approach is the
+    implementation suggested in the pytest docs.
     """
     # step 1: Mock
     def _mock_get_good_resp(*args, **kwargs):
@@ -107,6 +108,7 @@ def test_get_joke_monkeypatched_with_OOP(monkeypatch, _mock_response):
 
 
 def test_get_joke_text_monkeypatched(monkeypatch, _mock_response):
+    """Test behaviour when user asked for plain text joke."""
     # step 1: Mock
     def _mock_get_good_resp(*args, **kwargs):
         f = kwargs["headers"]["Accept"]
@@ -121,6 +123,7 @@ def test_get_joke_text_monkeypatched(monkeypatch, _mock_response):
 
 def test_get_joke_not_implemented_monkeypatched(
     monkeypatch, _mock_response):
+    """Test behaviour when user asked for HTML response."""
     #  step 1: Mock
     def _mock_get_good_resp(*args, **kwargs):
         f = kwargs["headers"]["Accept"]
@@ -147,6 +150,7 @@ def _mock_bad_response():
 
 def test_get_joke_http_error_monkeypatched(
     monkeypatch, _mock_bad_response):
+    """Test bad HTTP response."""
     #  step 1: Mock
     def _mock_get_bad_response(*args, **kwargs):
         f = kwargs["headers"]["Accept"]

@@ -20,7 +20,8 @@ def test_get_joke_mockitoed_entirely():
     unstub()
 
 
-def test_get_joke_json_mockito():
+def test_get_joke_json_mockitoed():
+    """Test behaviour when user asked for JSON joke."""
     # step 1: Mock
     mock_response = requests.models.Response()
     mock_response.status_code = 200
@@ -35,7 +36,8 @@ def test_get_joke_json_mockito():
     unstub()
 
 
-def test_get_joke_text_mockito():
+def test_get_joke_text_mockitoed():
+    """Test behaviour when user asked for plain text joke."""
     # step 1: Mock
     mock_response = requests.models.Response()
     mock_response.status_code = 200
@@ -50,7 +52,8 @@ def test_get_joke_text_mockito():
     unstub()
 
 
-def test_get_joke_not_implemented_mockito():
+def test_get_joke_not_implemented_mockitoed():
+    """Test behaviour when user asked for HTML response."""
     # step 1: Mock
     mock_response = requests.models.Response()
     mock_response.status_code = 200
@@ -67,7 +70,8 @@ def test_get_joke_not_implemented_mockito():
     unstub()
 
 
-def test_get_joke_http_error_mockito():
+def test_get_joke_http_error_mockitoed():
+    """Test bad HTTP response."""
     # step 1: Mock
     mock_response = requests.models.Response()
     mock_response.status_code = 404
