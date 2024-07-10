@@ -25,51 +25,55 @@ def test_get_joke_magicmocked_entirely():
 
 
 def test_get_joke_json_magicmock():
-    # Create a mock response object with the expected properties and methods
+    # step 1: Mock
     mock_response = MagicMock(spec=requests.models.Response)
     mock_response.ok = True
     mock_response.headers = {"Content-Type": "application/json"}
     mock_response.json.return_value = {"joke": ULTI_JOKE}
-    # Use patch to mock requests.get to return the mock response
+    # step 2: Patch
     with patch("requests.get", return_value=mock_response):
-        # Call the function to test
+        # step 3: Use
         joke = get_joke(f="application/json")
-        # Assert the expected result
+        # step 4: Assert
         assert joke == ULTI_JOKE
 
 
 def test_get_joke_text_magicmock():
-    # Create a mock response object with the expected properties and methods
+    # step 1: Mock
     mock_response = MagicMock(spec=requests.models.Response)
     mock_response.ok = True
     mock_response.headers = {"Content-Type": "text/plain"}
     mock_response.text = ULTI_JOKE
-    # Use patch to mock requests.get to return the mock response
+    # step 2: Patch
     with patch("requests.get", return_value=mock_response):
-        # Call the function to test
+        # step 3: Use
         joke = get_joke(f="text/plain")
-        # Assert the expected result
+        # step 4: Assert
         assert joke == ULTI_JOKE
 
 
 def test__handle_response_not_implemented_magicmock():
-    # Create a mock response object with a Content-Type that is not supported
+    # step 1: Mock
     mock_response = MagicMock(spec=requests.models.Response)
     mock_response.ok = True
     mock_response.headers = {"Content-Type": "text/html"}
-    # Call the function and assert it raises NotImplementedError
-    with pytest.raises(
-        NotImplementedError,
-        match="This client accepts 'application/json' or 'text/plain' format"):
-        _handle_response(mock_response)
+    #  step 2: Patch
+    with patch("requests.get", return_value=mock_response):
+        # step 3 & 4 Use (try to but exception is raised) & Assert
+        with pytest.raises(
+            NotImplementedError,
+            match="client accepts 'application/json' or 'text/plain' format"):
+            get_joke(f="text/html")
 
 
-def test__handle_response_http_error_magicmock():
-    # Create a mock response object with an error status
+def test_get_joke_http_error_magicmock():
+    # step 1: Mock
     mock_response = MagicMock(spec=requests.models.Response)
     mock_response.ok = False
     mock_response.status_code = 404
     mock_response.reason = "Not Found"
-    # Call the function and assert it raises HTTPError
-    with pytest.raises(requests.HTTPError, match="404: Not Found"):
-        _handle_response(mock_response)
+    # step 2: Patch
+    with patch("requests.get", return_value=mock_response):
+        # step 3 & 4 Use (try to but exception is raised) & Assert
+        with pytest.raises(requests.HTTPError, match="404: Not Found"):
+            get_joke()

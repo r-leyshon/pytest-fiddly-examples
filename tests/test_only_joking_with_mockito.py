@@ -21,58 +21,61 @@ def test_get_joke_mockitoed_entirely():
 
 
 def test_get_joke_json_mockito():
-    # Create a mock response object with the expected properties and methods
+    # step 1: Mock
     mock_response = requests.models.Response()
     mock_response.status_code = 200
     mock_response._content = b'{"joke": "' + ULTI_JOKE.encode("utf-8") + b'"}'
     mock_response.headers = {"Content-Type": "application/json"}
-    # Use mockito to mock requests.get to return the mock response
+    # step 2: Patch
     when(requests).get(...).thenReturn(mock_response)
-    # Call the function to test
+    # step 3: Use
     joke = example_pkg.only_joking.get_joke(f="application/json")
-    # Assert the expected result
+    # step 4: Assert
     assert joke == ULTI_JOKE
     unstub()
 
 
 def test_get_joke_text_mockito():
-    # Create a mock response object with the expected properties and methods
+    # step 1: Mock
     mock_response = requests.models.Response()
     mock_response.status_code = 200
     mock_response._content = ULTI_JOKE.encode("utf-8")
     mock_response.headers = {"Content-Type": "text/plain"}
-    # Use mockito to mock requests.get to return the mock response
+    # step 2: Patch
     when(requests).get(...).thenReturn(mock_response)
-    # Call the function to test
+    # step 3: Use
     joke = example_pkg.only_joking.get_joke(f="text/plain")
+    # step 4: Assert
     assert joke == ULTI_JOKE
     unstub()
 
 
-def test__handle_response_not_implemented_mockito():
-    # Create a mock response object with a Content-Type that is not supported
+def test_get_joke_not_implemented_mockito():
+    # step 1: Mock
     mock_response = requests.models.Response()
     mock_response.status_code = 200
     mock_response.headers = {"Content-Type": "text/html"}
+    # step 2: Patch
     when(
         example_pkg.only_joking
         )._query_endpoint(...).thenReturn(mock_response)
-    # Call the function and assert it raises NotImplementedError
+    # step 3 & 4 Use (try to but exception is raised) & Assert
     with pytest.raises(
         NotImplementedError,
         match="This client accepts 'application/json' or 'text/plain' format"):
-        example_pkg.only_joking._handle_response(mock_response)    
+        example_pkg.only_joking.get_joke(f="text/html")
     unstub()
 
 
-def test__handle_response_http_error_mockito():
-    # Create a mock response object with an error status
+def test_get_joke_http_error_mockito():
+    # step 1: Mock
     mock_response = requests.models.Response()
     mock_response.status_code = 404
     mock_response.reason = "Not Found"
-    # Use mockito to mock the response object
-    when(example_pkg.only_joking)._query_endpoint(...).thenReturn(mock_response)
-    # Call the function and assert it raises HTTPError
+    # step 2: Patch
+    when(example_pkg.only_joking)._query_endpoint(...).thenReturn(
+        mock_response)
+    # step 3 & 4 Use (try to but exception is raised) & Assert
     with pytest.raises(requests.HTTPError, match="404: Not Found"):
-        example_pkg.only_joking._handle_response(mock_response)
+        example_pkg.only_joking.get_joke()
     unstub()

@@ -34,7 +34,7 @@ def test_get_joke_monkeypatched_entirely(monkeypatch):
 
 
 def test_get_joke_monkeypatched_no_OOP(monkeypatch):
-    # step 1, mock the response object
+    # step 1: Mock the response object
     def mock_response(*args, **kwargs):
         resp = requests.models.Response()
         resp.status_code = 200
@@ -42,11 +42,11 @@ def test_get_joke_monkeypatched_no_OOP(monkeypatch):
         resp.headers = {"Content-Type": "text/plain"}
         return resp
     
-    # step 2, patch requests.get
+    # step 2: Patch requests.get
     monkeypatch.setattr(requests, "get", mock_response)
-    # step 3, use requests.get
+    # step 3: Use requests.get
     joke = get_joke()
-    # step 4, make an assertion
+    # step 4: Assert
     assert joke == ULTI_JOKE, f"Expected:\n'{ULTI_JOKE}\nFound:\n{joke}'"
     # will also work for json format
     joke = get_joke(f="application/json")
@@ -58,9 +58,7 @@ def test_get_joke_monkeypatched_no_OOP(monkeypatch):
 
 @pytest.fixture
 def _mock_response():
-    """Step 1, mock the response object
-
-    Return a class instance that will mock all the properties of a response
+    """Return a class instance that will mock all the properties of a response
     object that get_joke needs to work.
     """
     HEADERS_MAP = {
@@ -90,8 +88,9 @@ def test_get_joke_monkeypatched_with_OOP(monkeypatch, _mock_response):
 
     This approach is the implementation suggested in the pytest docs.
     """
+    # step 1: Mock
     def _mock_get_good_resp(*args, **kwargs):
-        """Step 2, Return fixtures with the correct header.
+        """Return fixtures with the correct header.
 
         If the test uses "text/plain" format, we need to return a MockResponse
         class instance with headers attribute equal to
@@ -99,30 +98,36 @@ def test_get_joke_monkeypatched_with_OOP(monkeypatch, _mock_response):
         """
         f = kwargs["headers"]["Accept"]
         return _mock_response(f)
-    # Step 3, patch requests.get
+    # Step 2: Patch
     monkeypatch.setattr(requests, "get", _mock_get_good_resp)
-    # Step 4, use function
+    # Step 3: Use
     j_json = get_joke(f="application/json")
-    # Step 5, make assertions
+    # Step 4: Assert
     assert j_json == ULTI_JOKE, f"Expected:\n'{ULTI_JOKE}\nFound:\n{j_json}'"
 
 
 def test_get_joke_text_monkeypatched(monkeypatch, _mock_response):
+    # step 1: Mock
     def _mock_get_good_resp(*args, **kwargs):
         f = kwargs["headers"]["Accept"]
         return _mock_response(f)
+    # step 2: Patch
     monkeypatch.setattr(requests, "get", _mock_get_good_resp)
+    # step 3: Use
     j_txt = get_joke(f="text/plain")
+    # step 4: Assert
     assert j_txt == ULTI_JOKE, f"Expected:\n'{ULTI_JOKE}\nFound:\n{j_txt}'"
 
 
-def test__handle_response_not_implemented_monkeypatched(
+def test_get_joke_not_implemented_monkeypatched(
     monkeypatch, _mock_response):
+    #  step 1: Mock
     def _mock_get_good_resp(*args, **kwargs):
         f = kwargs["headers"]["Accept"]
         return _mock_response(f)
-
+    # step 2: Patch
     monkeypatch.setattr(requests, "get", _mock_get_good_resp)
+    # step 3 & 4 Use (try to but exception is raised) & Assert
     with pytest.raises(
         NotImplementedError,
         match="This client accepts 'application/json' or 'text/plain' format"):
@@ -140,11 +145,14 @@ def _mock_bad_response():
     return MockBadResponse
 
 
-def test__handle_response_http_error_monkeypatched(monkeypatch, _mock_bad_response):
+def test_get_joke_http_error_monkeypatched(
+    monkeypatch, _mock_bad_response):
+    #  step 1: Mock
     def _mock_get_bad_response(*args, **kwargs):
         f = kwargs["headers"]["Accept"]
         return _mock_bad_response(f)
+    #  step 2: Patch
     monkeypatch.setattr(requests, "get", _mock_get_bad_response)
-    # check func raises on bad response
+    # step 3 & 4 Use (try to but exception is raised) & Assert
     with pytest.raises(requests.HTTPError, match="404: Not Found"):
         get_joke()
