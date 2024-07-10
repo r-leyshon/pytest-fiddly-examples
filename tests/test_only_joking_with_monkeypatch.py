@@ -10,7 +10,7 @@ ULTI_JOKE = """
 Tom Jones Syndrome." "Is it common?" Well, "It's Not Unusual."
 """
 
-def test_get_joke_mocked_entirely(monkeypatch):
+def test_get_joke_monkeypatched_entirely(monkeypatch):
     """Completely replace the entire get_joke return value.
 
     Not a good idea for testing as none of our source code will be tested. But
@@ -33,7 +33,7 @@ def test_get_joke_mocked_entirely(monkeypatch):
     assert example_pkg.only_joking.get_joke() == ULTI_JOKE 
 
 
-def test_get_joke_no_OOP(monkeypatch):
+def test_get_joke_monkeypatched_no_OOP(monkeypatch):
     # step 1, mock the response object
     def mock_response(*args, **kwargs):
         resp = requests.models.Response()
@@ -85,7 +85,7 @@ def _mock_response():
     return MockResponse
 
 
-def test_get_joke_with_OOP(monkeypatch, _mock_response):
+def test_get_joke_monkeypatched_with_OOP(monkeypatch, _mock_response):
     """Test get_joke using the mock class fixture.
 
     This approach is the implementation suggested in the pytest docs.
@@ -125,7 +125,7 @@ def _mock_bad_response():
     return MockBadResponse
 
 
-def test_get_joke_bad_response(monkeypatch, _mock_bad_response):
+def test_get_joke_monkeypatched_bad_response(monkeypatch, _mock_bad_response):
     def _mock_get_bad_response(*args, **kwargs):
         f = kwargs["headers"]["Accept"]
         return _mock_bad_response(f)

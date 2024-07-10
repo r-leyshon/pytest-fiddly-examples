@@ -12,7 +12,7 @@ Tom Jones Syndrome." "Is it common?" Well, "It's Not Unusual."
 """
 
 
-def test_get_joke_mocked_entirely(monkeypatch):
+def test_get_joke_magicmocked_entirely():
     """Completely replace the entire get_joke return value.
 
     Not a good idea for testing as none of our source code will be tested. But
@@ -24,7 +24,7 @@ def test_get_joke_mocked_entirely(monkeypatch):
         assert joke == ULTI_JOKE
 
 
-def test_get_joke_json():
+def test_get_joke_json_magicmock():
     # Create a mock response object with the expected properties and methods
     mock_response = MagicMock(spec=requests.models.Response)
     mock_response.ok = True
@@ -38,7 +38,7 @@ def test_get_joke_json():
         assert joke == ULTI_JOKE
 
 
-def test_get_joke_text():
+def test_get_joke_text_magicmock():
     # Create a mock response object with the expected properties and methods
     mock_response = MagicMock(spec=requests.models.Response)
     mock_response.ok = True
@@ -52,7 +52,7 @@ def test_get_joke_text():
         assert joke == ULTI_JOKE
 
 
-def test__handle_response_not_implemented():
+def test__handle_response_not_implemented_magicmock():
     # Create a mock response object with a Content-Type that is not supported
     mock_response = MagicMock(spec=requests.models.Response)
     mock_response.ok = True
@@ -64,7 +64,7 @@ def test__handle_response_not_implemented():
         _handle_response(mock_response)
 
 
-def test_handle_response_http_error():
+def test_handle_response_http_error_magicmock():
     # Create a mock response object with an error status
     mock_response = MagicMock(spec=requests.models.Response)
     mock_response.ok = False
