@@ -64,7 +64,7 @@ def test__handle_response_not_implemented_magicmock():
         _handle_response(mock_response)
 
 
-def test_handle_response_http_error_magicmock():
+def test__handle_response_http_error_magicmock():
     # Create a mock response object with an error status
     mock_response = MagicMock(spec=requests.models.Response)
     mock_response.ok = False

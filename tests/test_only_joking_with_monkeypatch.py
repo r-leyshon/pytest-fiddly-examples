@@ -102,17 +102,32 @@ def test_get_joke_monkeypatched_with_OOP(monkeypatch, _mock_response):
     # Step 3, patch requests.get
     monkeypatch.setattr(requests, "get", _mock_get_good_resp)
     # Step 4, use function
-    # Test for plain text format
-    j_txt = get_joke(f="text/plain")
-    # Test for JSON format
     j_json = get_joke(f="application/json")
     # Step 5, make assertions
-    assert j_txt == ULTI_JOKE, f"Expected:\n'{ULTI_JOKE}\nFound:\n{j_txt}'"
     assert j_json == ULTI_JOKE, f"Expected:\n'{ULTI_JOKE}\nFound:\n{j_json}'"
+
+
+def test_get_joke_text_monkeypatched(monkeypatch, _mock_response):
+    def _mock_get_good_resp(*args, **kwargs):
+        f = kwargs["headers"]["Accept"]
+        return _mock_response(f)
+    monkeypatch.setattr(requests, "get", _mock_get_good_resp)
+    j_txt = get_joke(f="text/plain")
+    assert j_txt == ULTI_JOKE, f"Expected:\n'{ULTI_JOKE}\nFound:\n{j_txt}'"
+
+
+def test__handle_response_not_implemented_monkeypatched(
+    monkeypatch, _mock_response):
+    def _mock_get_good_resp(*args, **kwargs):
+        f = kwargs["headers"]["Accept"]
+        return _mock_response(f)
+
+    monkeypatch.setattr(requests, "get", _mock_get_good_resp)
     with pytest.raises(
         NotImplementedError,
         match="This client accepts 'application/json' or 'text/plain' format"):
         get_joke(f="text/html")
+
 
 
 @pytest.fixture
@@ -120,16 +135,16 @@ def _mock_bad_response():
     class MockBadResponse:
         def __init__(self, *args, **kwargs):
             self.ok = False
-            self.status_code = 429
-            self.reason = "Too many requests"
+            self.status_code = 404
+            self.reason = "Not Found"
     return MockBadResponse
 
 
-def test_get_joke_monkeypatched_bad_response(monkeypatch, _mock_bad_response):
+def test__handle_response_http_error_monkeypatched(monkeypatch, _mock_bad_response):
     def _mock_get_bad_response(*args, **kwargs):
         f = kwargs["headers"]["Accept"]
         return _mock_bad_response(f)
     monkeypatch.setattr(requests, "get", _mock_get_bad_response)
     # check func raises on bad response
-    with pytest.raises(requests.HTTPError, match="429: Too many requests"):
+    with pytest.raises(requests.HTTPError, match="404: Not Found"):
         get_joke()
