@@ -4,11 +4,8 @@ import requests
 
 import example_pkg.only_joking
 
-ULTI_JOKE = ("Doc, I can't stop singing 'The Green, Green Grass of Home.' That "
-"sounds like Tom Jones Syndrome. Is it common? Well, It's Not Unusual.")
 
-
-def test_get_joke_mockitoed_entirely():
+def test_get_joke_mockitoed_entirely(ULTI_JOKE):
     """Completely replace the entire get_joke return value.
 
     Not a good idea for testing as none of our source code will be tested. But
@@ -20,7 +17,7 @@ def test_get_joke_mockitoed_entirely():
     unstub()
 
 
-def test_get_joke_json_mockitoed():
+def test_get_joke_json_mockitoed(ULTI_JOKE):
     """Test behaviour when user asked for JSON joke."""
     # step 1: Mock
     mock_response = requests.models.Response()
@@ -36,7 +33,7 @@ def test_get_joke_json_mockitoed():
     unstub()
 
 
-def test_get_joke_text_mockitoed():
+def test_get_joke_text_mockitoed(ULTI_JOKE):
     """Test behaviour when user asked for plain text joke."""
     # step 1: Mock
     mock_response = requests.models.Response()

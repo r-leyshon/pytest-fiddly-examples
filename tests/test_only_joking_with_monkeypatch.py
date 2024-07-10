@@ -5,12 +5,8 @@ import requests
 from example_pkg.only_joking import get_joke, _handle_response
 import example_pkg.only_joking
 
-ULTI_JOKE = """
-"Doc, I can't stop singing 'The Green, Green Grass of Home.'" "That sounds like
-Tom Jones Syndrome." "Is it common?" Well, "It's Not Unusual."
-"""
 
-def test_get_joke_monkeypatched_entirely(monkeypatch):
+def test_get_joke_monkeypatched_entirely(monkeypatch, ULTI_JOKE):
     """Completely replace the entire get_joke return value.
 
     Not a good idea for testing as none of our source code will be tested. But
@@ -33,7 +29,7 @@ def test_get_joke_monkeypatched_entirely(monkeypatch):
     assert example_pkg.only_joking.get_joke() == ULTI_JOKE 
 
 
-def test_get_joke_monkeypatched_no_OOP(monkeypatch):
+def test_get_joke_monkeypatched_no_OOP(monkeypatch, ULTI_JOKE):
     # step 1: Mock the response object
     def mock_response(*args, **kwargs):
         resp = requests.models.Response()
@@ -57,7 +53,7 @@ def test_get_joke_monkeypatched_no_OOP(monkeypatch):
 
 
 @pytest.fixture
-def _mock_response():
+def _mock_response(ULTI_JOKE):
     """Return a class instance that will mock all the properties of a response
     object that get_joke needs to work.
     """
@@ -83,7 +79,7 @@ def _mock_response():
     return MockResponse
 
 
-def test_get_joke_json_monkeypatched(monkeypatch, _mock_response):
+def test_get_joke_json_monkeypatched(monkeypatch, _mock_response, ULTI_JOKE):
     """Test behaviour when user asked for JSON joke.
 
     Test get_joke using the mock class fixture. This approach is the
@@ -107,7 +103,7 @@ def test_get_joke_json_monkeypatched(monkeypatch, _mock_response):
     assert j_json == ULTI_JOKE, f"Expected:\n'{ULTI_JOKE}\nFound:\n{j_json}'"
 
 
-def test_get_joke_text_monkeypatched(monkeypatch, _mock_response):
+def test_get_joke_text_monkeypatched(monkeypatch, _mock_response, ULTI_JOKE):
     """Test behaviour when user asked for plain text joke."""
     # step 1: Mock
     def _mock_get_good_resp(*args, **kwargs):
