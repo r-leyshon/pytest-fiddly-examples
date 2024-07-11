@@ -12,19 +12,20 @@ def test_get_joke_monkeypatched_entirely(monkeypatch, ULTI_JOKE):
     Not a good idea for testing as none of our source code will be tested. But
     this demonstrates how to entirely scrub a function and replace with any
     placeholder value at pytest runtime."""
-
-    def _mock_joke(*args):
+    # step 1
+    def _mock_joke():
         """Return the joke text.
 
         monkeypatch.setattr expects the value argument to be callable. In plain
         English, a function or class."""
         return ULTI_JOKE
-
+    # step 2
     monkeypatch.setattr(
         target=example_pkg.only_joking,
         name="get_joke",
         value=_mock_joke
         )
+    # step 3 & 4
     # Use the module's namespace to correspond with the monkeypatch
     assert example_pkg.only_joking.get_joke() == ULTI_JOKE 
 

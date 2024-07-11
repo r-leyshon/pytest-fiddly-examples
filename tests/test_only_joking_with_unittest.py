@@ -13,9 +13,13 @@ def test_get_joke_magicmocked_entirely(ULTI_JOKE):
     Not a good idea for testing as none of our source code will be tested. But
     this demonstrates how to entirely scrub a function and replace with any
     placeholder value at pytest runtime."""
+    # step 1
     mock_joke = MagicMock(return_value=ULTI_JOKE)
+    # step 2
     with patch("example_pkg.only_joking.get_joke", mock_joke):
+        # step 3
         joke = example_pkg.only_joking.get_joke()
+        # step 4
         assert joke == ULTI_JOKE
 
 

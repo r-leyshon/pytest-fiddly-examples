@@ -11,8 +11,11 @@ def test_get_joke_mockitoed_entirely(ULTI_JOKE):
     Not a good idea for testing as none of our source code will be tested. But
     this demonstrates how to entirely scrub a function and replace with any
     placeholder value at pytest runtime."""
+    # step 1 & 2
     when(example_pkg.only_joking).get_joke().thenReturn(ULTI_JOKE)
+    # step 3
     joke = example_pkg.only_joking.get_joke()
+    # step 4
     assert joke == ULTI_JOKE
     unstub()
 
