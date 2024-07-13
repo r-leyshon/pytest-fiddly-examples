@@ -2,7 +2,7 @@
 import pytest
 import requests
 
-from example_pkg.only_joking import get_joke, _handle_response
+from example_pkg.only_joking import get_joke
 import example_pkg.only_joking
 
 
@@ -32,7 +32,7 @@ def test_get_joke_monkeypatched_entirely(monkeypatch, ULTI_JOKE):
 
 def test_get_joke_monkeypatched_no_OOP(monkeypatch, ULTI_JOKE):
     # step 1: Mock the response object
-    def mock_response(*args, **kwargs):
+    def _mock_response(*args, **kwargs):
         resp = requests.models.Response()
         resp.status_code = 200
         resp._content = ULTI_JOKE.encode("UTF8")
@@ -40,7 +40,7 @@ def test_get_joke_monkeypatched_no_OOP(monkeypatch, ULTI_JOKE):
         return resp
     
     # step 2: Patch requests.get
-    monkeypatch.setattr(requests, "get", mock_response)
+    monkeypatch.setattr(requests, "get", _mock_response)
     # step 3: Use requests.get
     joke = get_joke()
     # step 4: Assert

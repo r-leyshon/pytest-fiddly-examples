@@ -23,12 +23,12 @@ def test_get_joke_mockitoed_entirely(ULTI_JOKE):
 def test_get_joke_json_mockitoed(ULTI_JOKE):
     """Test behaviour when user asked for JSON joke."""
     # step 1: Mock
-    mock_response = requests.models.Response()
-    mock_response.status_code = 200
-    mock_response._content = b'{"joke": "' + ULTI_JOKE.encode("utf-8") + b'"}'
-    mock_response.headers = {"Content-Type": "application/json"}
+    _mock_response = requests.models.Response()
+    _mock_response.status_code = 200
+    _mock_response._content = b'{"joke": "' + ULTI_JOKE.encode("utf-8") + b'"}'
+    _mock_response.headers = {"Content-Type": "application/json"}
     # step 2: Patch
-    when(requests).get(...).thenReturn(mock_response)
+    when(requests).get(...).thenReturn(_mock_response)
     # step 3: Use
     joke = example_pkg.only_joking.get_joke(f="application/json")
     # step 4: Assert
@@ -39,12 +39,12 @@ def test_get_joke_json_mockitoed(ULTI_JOKE):
 def test_get_joke_text_mockitoed(ULTI_JOKE):
     """Test behaviour when user asked for plain text joke."""
     # step 1: Mock
-    mock_response = requests.models.Response()
-    mock_response.status_code = 200
-    mock_response._content = ULTI_JOKE.encode("utf-8")
-    mock_response.headers = {"Content-Type": "text/plain"}
+    _mock_response = requests.models.Response()
+    _mock_response.status_code = 200
+    _mock_response._content = ULTI_JOKE.encode("utf-8")
+    _mock_response.headers = {"Content-Type": "text/plain"}
     # step 2: Patch
-    when(requests).get(...).thenReturn(mock_response)
+    when(requests).get(...).thenReturn(_mock_response)
     # step 3: Use
     joke = example_pkg.only_joking.get_joke(f="text/plain")
     # step 4: Assert
@@ -55,13 +55,13 @@ def test_get_joke_text_mockitoed(ULTI_JOKE):
 def test_get_joke_not_implemented_mockitoed():
     """Test behaviour when user asked for HTML response."""
     # step 1: Mock
-    mock_response = requests.models.Response()
-    mock_response.status_code = 200
-    mock_response.headers = {"Content-Type": "text/html"}
+    _mock_response = requests.models.Response()
+    _mock_response.status_code = 200
+    _mock_response.headers = {"Content-Type": "text/html"}
     # step 2: Patch
     when(
         example_pkg.only_joking
-        )._query_endpoint(...).thenReturn(mock_response)
+        )._query_endpoint(...).thenReturn(_mock_response)
     # step 3 & 4 Use (try to but exception is raised) & Assert
     with pytest.raises(
         NotImplementedError,
@@ -73,12 +73,12 @@ def test_get_joke_not_implemented_mockitoed():
 def test_get_joke_http_error_mockitoed():
     """Test bad HTTP response."""
     # step 1: Mock
-    mock_response = requests.models.Response()
-    mock_response.status_code = 404
-    mock_response.reason = "Not Found"
+    _mock_response = requests.models.Response()
+    _mock_response.status_code = 404
+    _mock_response.reason = "Not Found"
     # step 2: Patch
     when(example_pkg.only_joking)._query_endpoint(...).thenReturn(
-        mock_response)
+        _mock_response)
     # step 3 & 4 Use (try to but exception is raised) & Assert
     with pytest.raises(requests.HTTPError, match="404: Not Found"):
         example_pkg.only_joking.get_joke()
