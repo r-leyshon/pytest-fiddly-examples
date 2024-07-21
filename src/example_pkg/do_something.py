@@ -1,7 +1,16 @@
+import random
 import time
 from typing import Union
 
 import requests
+
+
+def croissant():
+    """A very flaky function."""
+    if round(random.uniform(0, 1)) == 1:
+        return True
+    else:
+        raise Exception("Flaky test detected!")
 
 
 def take_a_nap(how_many_seconds:Union[int, float]) -> str:
