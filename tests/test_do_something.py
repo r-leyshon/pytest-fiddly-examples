@@ -30,6 +30,7 @@ def test_check_site_available():
     assert check_site_available(url), f"site {url} is down..."
 
 
+@pytest.mark.slow
 @pytest.mark.integration
 @pytest.mark.classy
 class TestGoofyWrapper:
