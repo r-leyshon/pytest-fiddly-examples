@@ -1,6 +1,7 @@
 import pytest
 
 from example_pkg.do_something import (
+    croissant,
     take_a_nap,
     check_site_available,
     goofy_wrapper
@@ -9,6 +10,11 @@ from example_pkg.do_something import (
 
 def test_nothing():
     pass
+
+
+@pytest.mark.flaky
+def test_croissant():
+    assert croissant()
 
 
 @pytest.mark.slow
